@@ -34,7 +34,7 @@ const obfuscateOptions = [
   '--dead-code-injection true',
   '--dead-code-injection-threshold 0.4',
   '--debug-protection false',
-  '--disable-console-output true',
+  '--disable-console-output false',
   '--identifier-names-generator hexadecimal',
   '--log false',
   '--rename-globals false',

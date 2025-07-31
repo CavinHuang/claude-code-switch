@@ -21,10 +21,23 @@ fs.mkdirSync(DIST_DIR, { recursive: true });
 console.log('📂 Copying source files...');
 copyDirectory(SRC_DIR, path.join(DIST_DIR, SRC_DIR));
 
-// Copy bin directory
+// Copy and fix bin directory
 if (fs.existsSync(BIN_DIR)) {
   copyDirectory(BIN_DIR, path.join(DIST_DIR, BIN_DIR));
-  console.log('✅ Copied bin directory');
+  
+  // Fix the require path in bin files
+  const binFiles = fs.readdirSync(path.join(DIST_DIR, BIN_DIR));
+  binFiles.forEach(file => {
+    if (file.endsWith('.js')) {
+      const filePath = path.join(DIST_DIR, BIN_DIR, file);
+      let content = fs.readFileSync(filePath, 'utf8');
+      // Change '../src/index.js' to './src/index.js' for dist structure
+      content = content.replace("require('../src/index.js');", "require('./src/index.js');");
+      fs.writeFileSync(filePath, content);
+    }
+  });
+  
+  console.log('✅ Copied and fixed bin directory');
 }
 
 // Copy essential files
