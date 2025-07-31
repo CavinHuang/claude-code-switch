@@ -1,0 +1,57 @@
+{
+  "name": "claude-code-switch",
+  "version": "0.0.1",
+  "description": "A CLI tool for managing and switching Claude Code model providers",
+  "main": "src/index.js",
+  "bin": {
+    "ccs": "./bin/ccs.js"
+  },
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "global-install": "npm link",
+    "global-uninstall": "npm unlink -g claude-code-switch",
+    "build": "node scripts/build.js",
+    "obfuscate": "node scripts/obfuscate.js",
+    "publish:npm": "node scripts/publish.js",
+    "build:prod": "npm run build && npm run obfuscate",
+    "release": "npm run build:prod && npm run publish:npm",
+    "prepublishOnly": "echo \"Use 'npm run release' instead of 'npm publish'\" && exit 1"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "cli",
+    "provider",
+    "anthropic",
+    "ai",
+    "switcher",
+    "environment-variables"
+  ],
+  "author": "CCS Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/claude-code-switch.git"
+  },
+  "bugs": {
+    "url": "https://github.com/your-username/claude-code-switch/issues"
+  },
+  "homepage": "https://github.com/your-username/claude-code-switch#readme",
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "inquirer": "^8.2.5"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.0.2"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "src/",
+    "bin/",
+    "README.md",
+    "LICENSE"
+  ]
+}
