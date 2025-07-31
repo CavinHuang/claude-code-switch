@@ -31,8 +31,8 @@ if (fs.existsSync(BIN_DIR)) {
     if (file.endsWith('.js')) {
       const filePath = path.join(DIST_DIR, BIN_DIR, file);
       let content = fs.readFileSync(filePath, 'utf8');
-      // Change '../src/index.js' to './src/index.js' for dist structure
-      content = content.replace("require('../src/index.js');", "require('./src/index.js');");
+      // Keep '../src/index.js' since bin and src are at same level in dist
+      // No change needed for path;
       fs.writeFileSync(filePath, content);
     }
   });
