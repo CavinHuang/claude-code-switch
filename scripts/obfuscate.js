@@ -38,7 +38,6 @@ const obfuscateOptions = [
   '--identifier-names-generator hexadecimal',
   '--log false',
   '--rename-globals false',
-  '--rotate-string-array true',
   '--self-defending true',
   '--string-array true',
   '--string-array-encoding base64',

@@ -1,6 +1,6 @@
 {
   "name": "claude-code-switch",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A CLI tool for managing and switching Claude Code model providers",
   "main": "src/index.js",
   "bin": {
