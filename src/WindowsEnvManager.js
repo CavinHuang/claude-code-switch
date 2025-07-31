@@ -1,6 +1,10 @@
 const { execSync } = require('child_process');
+const path = require('path');
 
 class WindowsEnvManager {
+  constructor() {
+    this.refreshEnvScript = path.join(__dirname, 'RefreshEnv.ps1');
+  }
   setEnvVar(name, value) {
     try {
       // 方法1: 使用 setx 设置永久环境变量（兼容性最好）
@@ -88,7 +92,27 @@ class WindowsEnvManager {
         success = success && this.setEnvVar(name, value);
       }
     }
+    
+    // 使用 RefreshEnv.ps1 刷新所有环境变量
+    this.refreshEnvironment();
+    
     return success;
+  }
+  
+  refreshEnvironment() {
+    try {
+      console.log('\n🔄 正在刷新环境变量...');
+      execSync(`powershell -NoProfile -ExecutionPolicy Bypass -File "${this.refreshEnvScript}"`, {
+        stdio: 'inherit',
+        timeout: 10000
+      });
+      console.log('✓ 环境变量已刷新到当前会话');
+      return true;
+    } catch (error) {
+      console.warn('⚠️ 自动刷新失败，请手动运行:');
+      console.warn(`   powershell -NoProfile -ExecutionPolicy Bypass -File "${this.refreshEnvScript}"`);
+      return false;
+    }
   }
 }
 

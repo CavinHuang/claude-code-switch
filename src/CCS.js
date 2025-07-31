@@ -112,23 +112,18 @@ class CCS {
         this.ui.warning('⚠ 永久环境变量设置失败，但当前会话已生效');
       }
       
-      // 生成快速应用脚本（保持这个有用的功能）
+      // 生成快速应用脚本（供其他终端使用）
       const scripts = this.dynamicEnvManager.generateShellScript();
-      if (scripts) {
-        if (process.platform === 'win32') {
-          this.ui.info('如需在新终端立即应用，可使用:');
-          this.ui.info(`  PowerShell: . "${scripts.psScript}"`);
-          this.ui.info(`  Git Bash: source "${scripts.bashScript}"`);
-        } else {
-          const configFile = this.envManager.detectShellConfigFile();
-          this.ui.info(`如需立即生效: source ${configFile} 或重启终端`);
-        }
+      if (scripts && process.platform !== 'win32') {
+        const configFile = this.envManager.detectShellConfigFile();
+        this.ui.info(`如需立即生效: source ${configFile} 或重启终端`);
       }
       
       // 特别提醒 Claude Desktop 用户
-      this.ui.warning('⚠️  Claude Desktop 用户请注意:');
-      this.ui.warning('   完全退出并重启 Claude Desktop 应用以使更改生效');
-      this.ui.info('💡 或运行 `ccs refresh` 刷新当前终端会话')
+      if (process.platform === 'win32') {
+        this.ui.warning('⚠️  Claude Desktop 用户请注意:');
+        this.ui.warning('   完全退出并重启 Claude Desktop 应用以使更改生效');
+      }
       
     } catch (error) {
       this.ui.error(`切换厂商失败: ${error.message}`);

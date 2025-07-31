@@ -16,7 +16,8 @@
       "Bash(where:*)",
       "Bash(C:UsersAdministratorAppDataLocalVoltabinccs)",
       "Bash(echo:*)",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(npm test)"
     ],
     "deny": []
   }
