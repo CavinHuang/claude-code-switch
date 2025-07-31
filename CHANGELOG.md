@@ -7,7 +7,7 @@
 #### ✨ 新功能
 - **厂商管理**: 添加、删除、列出 Claude Code 厂商配置
 - **快速切换**: 一键切换不同厂商的 API 配置
-- **环境变量管理**: 自动管理 `ANTHROPIC_BASE_URL` 和 `ANTHROPIC_API_KEY`
+- **环境变量管理**: 自动管理 `ANTHROPIC_BASE_URL` 和 `ANTHROPIC_AUTH_TOKEN`
 - **跨平台支持**: 支持 Windows/macOS/Linux 三大平台
 - **交互式界面**: 友好的命令行界面和彩色输出
 - **安全存储**: 本地安全存储 API 密钥

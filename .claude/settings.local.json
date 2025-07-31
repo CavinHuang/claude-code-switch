@@ -11,7 +11,11 @@
       "Bash(ccs:*)",
       "Bash(rm:*)",
       "Bash(npm config:*)",
-      "Bash(where node)"
+      "Bash(where node)",
+      "Bash(npm install:*)",
+      "Bash(where:*)",
+      "Bash(C:UsersAdministratorAppDataLocalVoltabinccs)",
+      "Bash(echo:*)"
     ],
     "deny": []
   }

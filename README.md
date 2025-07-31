@@ -137,7 +137,7 @@ ccs current
 
 工具会自动管理以下环境变量：
 - `ANTHROPIC_BASE_URL`: API 端点地址
-- `ANTHROPIC_API_KEY`: API 密钥
+- `ANTHROPIC_AUTH_TOKEN`: API 密钥
 
 ### 环境变量生效
 - **Windows**: 需要重启终端或应用程序

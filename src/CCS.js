@@ -1,6 +1,7 @@
 const ConfigManager = require('./ConfigManager');
 const WindowsEnvManager = require('./WindowsEnvManager');
 const UnixEnvManager = require('./UnixEnvManager');
+const DynamicEnvManager = require('./DynamicEnvManager');
 const SecurityManager = require('./SecurityManager');
 const UIManager = require('./UIManager');
 
@@ -10,6 +11,7 @@ class CCS {
     this.envManager = process.platform === 'win32' 
       ? new WindowsEnvManager() 
       : new UnixEnvManager();
+    this.dynamicEnvManager = new DynamicEnvManager();
     this.ui = new UIManager();
     this.security = new SecurityManager();
   }
@@ -88,22 +90,44 @@ class CCS {
       }
       
       if (provider.api_key) {
-        envVars['ANTHROPIC_API_KEY'] = provider.api_key;
+        envVars['ANTHROPIC_AUTH_TOKEN'] = provider.api_key;
       }
       
-      const success = this.envManager.setMultipleEnvVars(envVars);
+      // 清除旧的 ANTHROPIC_API_KEY 环境变量
+      envVars['ANTHROPIC_API_KEY'] = null;
       
-      if (success) {
-        this.ui.success(`已切换到厂商: ${name}`);
+      // 核心三步：
+      // 1. 立即在当前进程中设置环境变量
+      this.dynamicEnvManager.setCurrentSessionVars(envVars);
+      
+      // 2. 设置永久环境变量
+      const permanentSuccess = this.envManager.setMultipleEnvVars(envVars);
+      
+      // 3. 保存到文件缓存供其他进程使用
+      this.dynamicEnvManager.saveEnvToFile(envVars);
+      
+      // 显示结果
+      this.ui.success(`✓ 已切换到厂商: ${name}`);
+      
+      if (permanentSuccess) {
+        this.ui.info('✓ 环境变量已设置（立即生效 + 永久保存）');
+      } else {
+        this.ui.warning('⚠ 永久环境变量设置失败，但当前会话已生效');
+      }
+      
+      // 生成快速应用脚本（保持这个有用的功能）
+      const scripts = this.dynamicEnvManager.generateShellScript();
+      if (scripts) {
         if (process.platform === 'win32') {
-          this.ui.info('请重启终端使更改生效');
+          this.ui.info('如需在新终端立即应用，可使用:');
+          this.ui.info(`  PowerShell: . "${scripts.psScript}"`);
+          this.ui.info(`  Git Bash: source "${scripts.bashScript}"`);
         } else {
           const configFile = this.envManager.detectShellConfigFile();
-          this.ui.info(`请执行 'source ${configFile}' 或重启终端使更改生效`);
+          this.ui.info(`如需立即生效: source ${configFile} 或重启终端`);
         }
-      } else {
-        throw new Error('设置环境变量失败');
       }
+      
     } catch (error) {
       this.ui.error(`切换厂商失败: ${error.message}`);
     }
@@ -128,6 +152,32 @@ class CCS {
     }
   }
 
+  async apply() {
+    try {
+      const savedEnv = this.dynamicEnvManager.applyEnvFromFile();
+      
+      if (Object.keys(savedEnv).length === 0) {
+        this.ui.info('没有找到已保存的环境变量配置');
+        return;
+      }
+      
+      this.ui.success('✓ 已应用保存的环境变量到当前会话');
+      this.ui.info('🔍 应用的环境变量:');
+      
+      for (const [name, value] of Object.entries(savedEnv)) {
+        if (name === 'ANTHROPIC_AUTH_TOKEN') {
+          this.ui.info(`   ${name}: ***已设置***`);
+        } else {
+          this.ui.info(`   ${name}: ${value}`);
+        }
+      }
+      
+    } catch (error) {
+      this.ui.error(`应用环境变量失败: ${error.message}`);
+    }
+  }
+
+
   async remove(name) {
     try {
       if (!name) {
@@ -150,9 +200,6 @@ class CCS {
     }
   }
 
-  help() {
-    this.ui.displayHelp();
-  }
 }
 
 module.exports = CCS;

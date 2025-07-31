@@ -35,26 +35,6 @@ class UIManager {
     console.log();
   }
 
-  displayHelp() {
-    console.log(chalk.bold('\nClaude Code Switch (CCS) - 切换 Claude Code 模型厂商\n'));
-    
-    console.log(chalk.bold('用法:'));
-    console.log('  ccs <command> [options]\n');
-    
-    console.log(chalk.bold('命令:'));
-    console.log(`  ${chalk.cyan('list')}                    列出所有配置的厂商`);
-    console.log(`  ${chalk.cyan('current')}                 显示当前活跃厂商`);
-    console.log(`  ${chalk.cyan('add')} <name>              添加新厂商配置`);
-    console.log(`  ${chalk.cyan('use')} <name>              切换到指定厂商`);
-    console.log(`  ${chalk.cyan('remove')} <name>           删除厂商配置`);
-    console.log(`  ${chalk.cyan('help')}                    显示此帮助信息\n`);
-    
-    console.log(chalk.bold('示例:'));
-    console.log(`  ${chalk.gray('ccs list                    # 查看所有厂商')}`);
-    console.log(`  ${chalk.gray('ccs add moonshot            # 添加月之暗面厂商')}`);
-    console.log(`  ${chalk.gray('ccs use anthropic           # 切换到 Anthropic 官方')}`);
-    console.log(`  ${chalk.gray('ccs current                 # 查看当前厂商')}`);
-  }
 
   prompt(message) {
     return new Promise((resolve) => {

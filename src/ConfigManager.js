@@ -101,7 +101,7 @@ class ConfigManager {
 
   getCurrentProvider() {
     const baseUrl = process.env.ANTHROPIC_BASE_URL;
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.ANTHROPIC_AUTH_TOKEN;
     
     if (!baseUrl && !apiKey) {
       return null;
@@ -127,7 +127,7 @@ class ConfigManager {
   // 获取当前环境变量中的provider信息（实时检测）
   getCurrentProviderFromEnv() {
     const baseUrl = process.env.ANTHROPIC_BASE_URL;
-    const apiKey = process.env.ANTHROPIC_API_KEY;
+    const apiKey = process.env.ANTHROPIC_AUTH_TOKEN;
     
     // 检查setx设置的环境变量（Windows）
     if (process.platform === 'win32') {
