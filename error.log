@@ -1,0 +1,25 @@
+ # ccs refresh
+ℹ 🔄 从注册表刷新环境变量到当前会话...
+Set-PSReadLineOption : The predictive suggestion feature cannot be enabled because the console output doesn't support v
+irtual terminal processing or it's redirected.
+����λ�� C:\Users\Administrator\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1:14 �ַ�: 1
++ Set-PSReadLineOption -PredictionSource History
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Set-PSReadLineOption], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.SetPSReadLineOption
+
+Set-PSReadLineOption : The predictive suggestion feature cannot be enabled because the console output doesn't support v
+irtual terminal processing or it's redirected.
+����λ�� C:\Users\Administrator\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1:14 �ַ�: 1
++ Set-PSReadLineOption -PredictionSource History
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Set-PSReadLineOption], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.SetPSReadLineOption
+
+Set-PSReadLineOption : The predictive suggestion feature cannot be enabled because the console output doesn't support v
+irtual terminal processing or it's redirected.
+����λ�� C:\Users\Administrator\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1:14 �ַ�: 1
++ Set-PSReadLineOption -PredictionSource History
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Set-PSReadLineOption], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.SetPSReadLineOption

@@ -92,6 +92,17 @@ async function main() {
       }
     });
 
+  cli
+    .command('refresh', '从注册表刷新环境变量到当前会话')
+    .example('ccs refresh')
+    .action(async () => {
+      try {
+        await ccs.refresh();
+      } catch (error) {
+        console.error('执行命令时出错:', error.message);
+        process.exit(1);
+      }
+    });
 
   cli.parse();
   

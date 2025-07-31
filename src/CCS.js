@@ -93,9 +93,6 @@ class CCS {
         envVars['ANTHROPIC_AUTH_TOKEN'] = provider.api_key;
       }
       
-      // 清除旧的 ANTHROPIC_API_KEY 环境变量
-      envVars['ANTHROPIC_API_KEY'] = null;
-      
       // 核心三步：
       // 1. 立即在当前进程中设置环境变量
       this.dynamicEnvManager.setCurrentSessionVars(envVars);
@@ -127,6 +124,11 @@ class CCS {
           this.ui.info(`如需立即生效: source ${configFile} 或重启终端`);
         }
       }
+      
+      // 特别提醒 Claude Desktop 用户
+      this.ui.warning('⚠️  Claude Desktop 用户请注意:');
+      this.ui.warning('   完全退出并重启 Claude Desktop 应用以使更改生效');
+      this.ui.info('💡 或运行 `ccs refresh` 刷新当前终端会话')
       
     } catch (error) {
       this.ui.error(`切换厂商失败: ${error.message}`);
@@ -177,6 +179,44 @@ class CCS {
     }
   }
 
+  async refresh() {
+    try {
+      this.ui.info('🔄 从注册表刷新环境变量到当前会话...');
+      
+      // 获取所有 ANTHROPIC 相关的环境变量
+      const anthropicVars = ['ANTHROPIC_AUTH_TOKEN', 'ANTHROPIC_BASE_URL', 'ANTHROPIC_API_KEY'];
+      const refreshedVars = {};
+      
+      for (const varName of anthropicVars) {
+        const userValue = process.platform === 'win32' 
+          ? require('child_process').execSync(`powershell -NoProfile -Command "[System.Environment]::GetEnvironmentVariable('${varName}', 'User')"`, { encoding: 'utf8' }).trim()
+          : process.env[varName];
+          
+        if (userValue && userValue !== 'null' && userValue !== '') {
+          process.env[varName] = userValue;
+          refreshedVars[varName] = varName === 'ANTHROPIC_AUTH_TOKEN' ? '***已设置***' : userValue;
+        } else {
+          delete process.env[varName];
+        }
+      }
+      
+      if (Object.keys(refreshedVars).length > 0) {
+        this.ui.success('✓ 已刷新以下环境变量到当前会话:');
+        for (const [name, displayValue] of Object.entries(refreshedVars)) {
+          this.ui.info(`   ${name}: ${displayValue}`);
+        }
+      } else {
+        this.ui.info('没有找到需要刷新的 ANTHROPIC 环境变量');
+      }
+      
+      this.ui.warning('⚠️  Claude Desktop 用户注意:');
+      this.ui.warning('   - 终端会话已刷新，但 Claude Desktop 应用需要完全重启');
+      this.ui.warning('   - 请退出并重新启动 Claude Desktop 以使更改生效');
+      
+    } catch (error) {
+      this.ui.error(`刷新环境变量失败: ${error.message}`);
+    }
+  }
 
   async remove(name) {
     try {
