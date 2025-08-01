@@ -18,7 +18,8 @@
       "Bash(echo:*)",
       "Bash(powershell:*)",
       "Bash(npm test)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nrefactor: 简化环境变量管理逻辑，移除冗余刷新机制\n\n- 移除 WindowsEnvManager.js 中的 PowerShell 会话刷新逻辑和手动命令提示\n- 删除 CCS.js 中的 refresh 方法和环境变量刷新提示\n- 删除 RefreshEnv.ps1 脚本文件\n- 清理 examples 目录中的过时脚本文件\n- 简化代码逻辑，依赖前置脚本完成环境变量刷新操作\nEOF\n)\")"
     ],
     "deny": []
   }
