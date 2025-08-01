@@ -26,6 +26,90 @@ npm install
 npm run global-install
 ```
 
+## 🔧 Windows 用户前置设置
+
+为了在 Windows 上无需重启终端即可应用环境变量更改，需要进行一次性设置：
+
+### 1. 打开 PowerShell 配置文件
+```powershell
+# 检查配置文件是否存在
+Test-Path $PROFILE
+
+# 如果不存在，创建配置文件
+if (!(Test-Path $PROFILE)) {
+    New-Item -ItemType File -Path $PROFILE -Force
+}
+
+# 打开配置文件进行编辑
+notepad $PROFILE
+```
+
+### 2. 添加 source 函数
+在配置文件中添加以下内容：
+```powershell
+# Claude Code Switch - Environment Refresh Function
+function source {
+    Write-Host "Refreshing cmd.exe environment variables from registry. Please wait..." -NoNewline
+
+    function Set-FromReg {
+        param (
+            [string]$regPath,
+            [string]$name,
+            [string]$varName
+        )
+        $value = Get-ItemProperty -Path $regPath -Name $name -ErrorAction SilentlyContinue
+        if ($value) {
+            Set-Item -Path Env:$varName -Value $value.$name
+        }
+    }
+
+    function Get-RegEnv {
+        param (
+            [string]$regPath
+        )
+        $vars = Get-Item -Path $regPath
+        foreach ($var in $vars.Property) {
+            if ($var -ne "Path") {
+                Set-FromReg $regPath $var $var
+            }
+        }
+    }
+
+    # Get system and user environment variables
+    Get-RegEnv "HKLM:\System\CurrentControlSet\Control\Session Manager\Environment"
+    Get-RegEnv "HKCU:\Environment"
+
+    # Special handling for PATH - combine user and system paths
+    $path_HKLM = (Get-ItemProperty -Path "HKLM:\System\CurrentControlSet\Control\Session Manager\Environment").Path
+    $path_HKCU = (Get-ItemProperty -Path "HKCU:\Environment").Path
+    $env:Path = "$path_HKLM;$path_HKCU"
+
+    # Save original username and architecture
+    $OriginalUserName = $env:USERNAME
+    $OriginalArchitecture = $env:PROCESSOR_ARCHITECTURE
+
+    # Reset username and architecture
+    $env:USERNAME = $OriginalUserName
+    $env:PROCESSOR_ARCHITECTURE = $OriginalArchitecture
+
+    Write-Host "Done."
+}
+```
+
+### 3. 重新加载配置文件
+```powershell
+# 重新加载 PowerShell 配置文件
+. $PROFILE
+```
+
+### 4. 验证设置
+```powershell
+# 测试 source 命令是否可用
+Get-Command source
+```
+
+完成以上设置后，每次使用 `ccs use` 切换厂商后，只需执行 `source` 命令即可立即应用环境变量更改，无需重启终端。
+
 ## 🚀 快速开始
 
 ### 1. 查看帮助信息
@@ -140,8 +224,12 @@ ccs current
 - `ANTHROPIC_AUTH_TOKEN`: API 密钥
 
 ### 环境变量生效
-- **Windows**: 需要重启终端或应用程序
-- **macOS/Linux**: 执行 `source ~/.bashrc` 或重启终端
+使用 `ccs use` 切换厂商后，工具会提示相应的刷新命令：
+
+- **Windows**: 执行 `source` 命令（需要完成前置设置）
+- **macOS/Linux**: 执行 `source ~/.bashrc` 或 `source ~/.zshrc`
+
+这样无需重启终端即可立即应用环境变量更改。
 
 ## 💡 使用场景
 
@@ -192,7 +280,9 @@ npm install -g claude-code-switch
 
 ### 2. 环境变量不生效
 ```bash
-# Windows: 重启命令行
+# Windows: 执行 source 命令
+source
+
 # macOS/Linux: 重新加载配置
 source ~/.bashrc  # 或 ~/.zshrc
 ```

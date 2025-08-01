@@ -17,7 +17,8 @@
       "Bash(C:UsersAdministratorAppDataLocalVoltabinccs)",
       "Bash(echo:*)",
       "Bash(powershell:*)",
-      "Bash(npm test)"
+      "Bash(npm test)",
+      "Bash(git add:*)"
     ],
     "deny": []
   }
