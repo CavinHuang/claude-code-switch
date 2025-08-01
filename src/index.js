@@ -80,30 +80,6 @@ async function main() {
       }
     });
 
-  cli
-    .command('apply', '应用已保存的环境变量到当前会话')
-    .example('ccs apply')
-    .action(async () => {
-      try {
-        await ccs.apply();
-      } catch (error) {
-        console.error('执行命令时出错:', error.message);
-        process.exit(1);
-      }
-    });
-
-  cli
-    .command('refresh', '从注册表刷新环境变量到当前会话')
-    .example('ccs refresh')
-    .action(async () => {
-      try {
-        await ccs.refresh();
-      } catch (error) {
-        console.error('执行命令时出错:', error.message);
-        process.exit(1);
-      }
-    });
-
   cli.parse();
   
   // 如果没有提供任何命令或参数，显示帮助信息

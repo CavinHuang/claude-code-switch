@@ -147,31 +147,6 @@ class CCS {
     }
   }
 
-  async apply() {
-    try {
-      const savedEnv = this.dynamicEnvManager.applyEnvFromFile();
-      
-      if (Object.keys(savedEnv).length === 0) {
-        this.ui.info('没有找到已保存的环境变量配置');
-        return;
-      }
-      
-      this.ui.success('✓ 已应用保存的环境变量到当前会话');
-      this.ui.info('🔍 应用的环境变量:');
-      
-      for (const [name, value] of Object.entries(savedEnv)) {
-        if (name === 'ANTHROPIC_AUTH_TOKEN') {
-          this.ui.info(`   ${name}: ***已设置***`);
-        } else {
-          this.ui.info(`   ${name}: ${value}`);
-        }
-      }
-      
-    } catch (error) {
-      this.ui.error(`应用环境变量失败: ${error.message}`);
-    }
-  }
-
   async remove(name) {
     try {
       if (!name) {
